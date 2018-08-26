@@ -34,5 +34,6 @@ export class AppRoutingModule {
 export const routingComponents = [
   LoginComponent,
   InsurancesComponent,
-  UsersComponent
+  UsersComponent,
+  AdminComponent
 ]

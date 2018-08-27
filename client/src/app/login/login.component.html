@@ -1,10 +1,10 @@
 <div class="wrapper">
-  <mat-form-field>
-    <input matInput placeholder="Username">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="password">
-  </mat-form-field>
-  <button mat-flat-button color="primary">Log In</button>
+    <mat-form-field>
+      <input matInput placeholder="Username" [(ngModel)]="username">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" type="password" [(ngModel)]="password">
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="loginUser()">Log In</button>
 </div>
 

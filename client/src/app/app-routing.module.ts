@@ -2,7 +2,7 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent }       from './login/login.component';
 import { InsurancesComponent }  from './insurances/insurances.component';
-import { UsersComponent }       from './users/users.component';
+import { ClientsComponent }       from './clients/clients.component';
 import { AdminComponent }       from './admin/admin.component';
 
 const routes: Routes = [
@@ -12,7 +12,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
       {path: 'insurances', component: InsurancesComponent },
-      {path: 'users', component: UsersComponent },
+      {path: 'clients', component: ClientsComponent },
     ]
   }, 
   { path: 'login', component: LoginComponent },
@@ -34,6 +34,6 @@ export class AppRoutingModule {
 export const routingComponents = [
   LoginComponent,
   InsurancesComponent,
-  UsersComponent,
+  ClientsComponent,
   AdminComponent
 ]

@@ -2,20 +2,35 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent }       from './login/login.component';
 import { InsurancesComponent }  from './insurances/insurances.component';
-import { ClientsComponent }       from './clients/clients.component';
+import { ClientsComponent }     from './clients/clients.component';
 import { AdminComponent }       from './admin/admin.component';
-
+import { AuthGuard }            from './_guards/auth.guard'
 const routes: Routes = [
   {    
     path: '',
     component: AdminComponent,
     children: [
-      { path: '', redirectTo: 'users', pathMatch: 'full' },
-      {path: 'insurances', component: InsurancesComponent },
-      {path: 'clients', component: ClientsComponent },
+      { 
+        path: '', 
+        redirectTo: 'clients', 
+        pathMatch: 'full' 
+      },
+      {
+        path: 'insurances', 
+        component: InsurancesComponent, 
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'clients', 
+        component: ClientsComponent,
+        canActivate: [AuthGuard] 
+      },
     ]
   }, 
-  { path: 'login', component: LoginComponent },
+  { 
+    path: 'login', 
+    component: LoginComponent 
+  },
  ];
 
 @NgModule({

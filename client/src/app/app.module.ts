@@ -4,14 +4,18 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AdminComponent } from './admin/admin.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialModule} from './plugins/material';
 
 @NgModule({
   declarations: [
     AppComponent,
-    routingComponents,
+    routingComponents
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
+    MaterialModule,
     AppRoutingModule,
     HttpClientModule
   ],

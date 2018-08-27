@@ -1,7 +1,8 @@
 var compose = require('composable-middleware');
 var expressJwt = require('express-jwt');
-var config = require(__srcpath + '/config/environment');
 var jwt = require('jsonwebtoken');
+var request = require('request');
+const USER_DATA_URL = 'http://www.mocky.io/v2/5808862710000087232b75ac'
 
 /**
  * Attaches the user object to the request if authenticated
@@ -12,17 +13,49 @@ var jwt = require('jsonwebtoken');
  * Returns a jwt token signed by the app secret
  */
 module.exports.signToken = function(id) {
-  return jwt.sign({ id }, config.secrets.session, {
+  return jwt.sign({ id }, 'pipo', {
     expiresIn: 60 * 60 * 5,
   });
 }
 
 const validateJwt = expressJwt({
-  secret: config.secrets.session,
+  secret:  'pipo',
 });
 
-const getUsers = function() {
-    
+const getAllUsers = function () {
+  return new Promise(function (resolve, reject) {
+    request(USER_DATA_URL, { json: true } ,(err, response, body) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(body.clients)
+      }
+    });
+  });
+}
+
+const findUser = (clients, username) => {
+  for (client in clients) {
+    if (clients[client].name.toLowerCase() == username || clients[client].email.toLowerCase() == username)
+      return clients[client];
+  }
+  return null;
+}
+
+module.exports.getUser = function(username) {
+  return new Promise( function(resolve, reject){ 
+    getAllUsers().then(clients => {
+      let user = findUser(clients, username); 
+      if (user != null)
+        resolve(user);
+      else
+        reject('No se encontro usuario');
+    });
+  }); 
+}
+
+module.exports.getAll = function() {
+  return getAllUsers();
 }
 
 module.exports.isAuthenticated = function() {

@@ -12,7 +12,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 var app = require(path.join(__srcpath , 'app'));
 var debug = require('debug')('server:server');
 var http = require('http');
-var db = require(path.join(__srcpath, 'modules', 'db'));
 
 /**
  * Get port from environment and store in Express.
@@ -30,13 +29,9 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-db.sequelize.sync().then(function(){
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);    
-}).catch((err) => {
-  console.log('Fallo iniciar el servidor debido a un error: %s', err);
-});
 
 /**
  * Normalize a port into a number, string, or false.

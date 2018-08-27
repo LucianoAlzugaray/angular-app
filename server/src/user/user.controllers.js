@@ -1,6 +1,5 @@
 var path = require('path');
-var User = require('./user.model').User;
-var services = require('./user.services');
+var UserServices = require('./user.services');
 var responses = require(path.join(__srcpath, 'modules', 'utils','responses'));
 
 
@@ -20,18 +19,15 @@ module.exports.sanitizate = function(req, res, next) {
   Autentica un usuario
 */
 module.exports.login = function(req, res, next){
-  User.findByName().then(user => {
-    if(user){
-      if (user.verifyPassword(req.body.password)) {
-        var token = services.signToken(user.id);
-        res.json({token:token});
-      } else {
-        res.json({ message: 'La contraseña es incorrecta.'});
-      }
-    } else {
-      res.json({ message: 'El usuario no existe'});
-    }
-  })
+  username = req.body.username;
+  password = req.body.password;
+  UserServices.getUser(username).then( client => {
+    
+    res.json(client);
+  }).catch(err => {
+    console.log(err);
+  });
+  
 }
 
 /*
@@ -51,7 +47,6 @@ module.exports.findAll = function(req, res, next) {
     .then(responses.responseWithResult(res))
     .catch(responses.handleError(res));
 }
-
 
 module.exports.findById = function(req, res, next){
   console.log('req.params.id: ' + req.params.id);

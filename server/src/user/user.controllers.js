@@ -2,18 +2,6 @@ var path = require('path');
 var UserServices = require('./user.services');
 var responses = require(path.join(__srcpath, 'modules', 'utils','responses'));
 
-
-module.exports.sanitizate = function(req, res, next) {
-  if (req.body.username) {
-    req.body.username = req.body.username.toLowerCase();
-  }
-  if (req.body.email) {
-    req.body.email = req.body.email.toLowerCase();
-  }
-  next();
-}
-
-
 /*
   Login
   Autentica un usuario
@@ -22,10 +10,11 @@ module.exports.login = function(req, res, next){
   username = req.body.username;
   password = req.body.password;
   UserServices.getUser(username).then( client => {
-    
-    res.json(client);
+    let token = UserServices.signToken(client);
+    res.json({user:client, token:token});
   }).catch(err => {
     console.log(err);
+    res.sendStatus(403);
   });
   
 }
@@ -49,7 +38,6 @@ module.exports.findAll = function(req, res, next) {
 }
 
 module.exports.findById = function(req, res, next){
-  console.log('req.params.id: ' + req.params.id);
 
   const user_id = req.params.id;
 

@@ -1,19 +1,29 @@
 var compose = require('composable-middleware');
 var expressJwt = require('express-jwt');
-var jwt = require('jsonwebtoken');
 var request = require('request');
 const USER_DATA_URL = 'http://www.mocky.io/v2/5808862710000087232b75ac'
-
+var jwt = require('jsonwebtoken')
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
  */
 
+module.exports.sanitizate = function(req, res, next) {
+  if (req.body.username) {
+    req.body.username = req.body.username.toLowerCase();
+  }
+  if (req.body.email) {
+    req.body.email = req.body.email.toLowerCase();
+  }
+  next();
+}
+
+
 /**
  * Returns a jwt token signed by the app secret
  */
-module.exports.signToken = function(id) {
-  return jwt.sign({ id }, 'pipo', {
+module.exports.signToken = function(user) {
+  return jwt.sign({ user:user }, 'pipo', {
     expiresIn: 60 * 60 * 5,
   });
 }

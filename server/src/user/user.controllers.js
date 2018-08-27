@@ -10,13 +10,13 @@ module.exports.login = function(req, res, next){
   username = req.body.username;
   password = req.body.password;
   UserServices.getUser(username).then( client => {
+    //authenticate password
     let token = UserServices.signToken(client);
     res.json({user:client, token:token});
   }).catch(err => {
     console.log(err);
     res.sendStatus(403);
   });
-  
 }
 
 /*

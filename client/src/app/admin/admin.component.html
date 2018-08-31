@@ -1,6 +1,8 @@
-<p>
-  <button (click)="printUser()">User</button>
-
+<div class="admin-wrapper">
+  <mat-button-toggle-group #group="matButtonToggleGroup" class="admin-buttons" *ngIf="isAdmin()">
+    <mat-button-toggle value="Clients" (click)="goToClients()"> Clients</mat-button-toggle>
+    <mat-button-toggle value="Insurances" (click)="goToInsurances()">Insurances</mat-button-toggle>
+  </mat-button-toggle-group>
   <router-outlet></router-outlet>
-  
-</p>
+  <button mat-flat-button color="warn" (click)="logout()">Log Out</button>
+</div>

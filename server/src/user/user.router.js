@@ -6,8 +6,6 @@ var userServices = require('./user.services');
 
 router.post('/login', userServices.sanitizate, controllers.login);
 
-/* Devolver todos los usuarios 
-router.get('/', auth.isAuthenticated(), auth.hasPermission('read','usuarios'), controllers.findAll);
-*/
+router.get('/', controllers.findAll )
 
 module.exports = router;

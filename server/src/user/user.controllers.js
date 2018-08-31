@@ -24,14 +24,10 @@ module.exports.login = function(req, res, next){
   Devuelve a todos los usuarios
 */
 module.exports.findAll = function(req, res, next) {
-  User
-    .findAll({
-      attributes: [
-        'id',
-        'username',
-        'email',
-      ],
-    })
+  UserServices.getAll().then(data => {
+    console.log(data);
+    res.json(data);
+  })
     .then(responses.handleEntityNotFound(res))
     .then(responses.responseWithResult(res))
     .catch(responses.handleError(res));

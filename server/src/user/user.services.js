@@ -3,6 +3,15 @@ var expressJwt = require('express-jwt');
 var request = require('request');
 const USER_DATA_URL = 'http://www.mocky.io/v2/5808862710000087232b75ac'
 var jwt = require('jsonwebtoken')
+
+var permissions = {
+  'admin':{
+    'read': ['clients','insurances']
+  },
+  'users':{
+    'read': ['clients']
+  }
+}
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
@@ -68,51 +77,57 @@ module.exports.getAll = function() {
   return getAllUsers();
 }
 
-module.exports.isAuthenticated = function() {
-  return compose()
-    // Validate jwt
-    .use((req, res, next) => {
-      // allow access_token to be passed through query parameter as well
-      if (req.query && req.query.hasOwnProperty('access_token')) {
-        req.headers.authorization = `Bearer ${req.query.access_token}`;
-      }
-      validateJwt(req, res, next);
-    })
-    // Attach user to request
-    .use((req, res, next) => {
-      User
-        .find({
-          where: {
-            id: req.user.id,
-          },
-        })
-        .then((user) => {
-          if (!user) {
-            return res.status(401).end();
-          }
-          req.user = user;
+module.exports.isAuthenticated = function(req, res, next) {
+    /*
+     * Check if authorization header is set
+     */
+    if( req.hasOwnProperty('headers') && req.headers.hasOwnProperty('authorization') ) {
+        try {
+            /*
+             * Try to decode & verify the JWT token
+             * The token contains user's id ( it can contain more informations )
+             * and this is saved in req.user object
+             */
+            req.user = jwt.verify(req.headers['authorization'], 'pipo');
+        } catch(err) {
+            /*
+             * If the authorization header is corrupted, it throws exception
+             * So return 401 status code with JSON error message
+             */
+            return res.status(401).json({
+                error: {
+                    msg: 'Failed to authenticate token!'
+                }
+            });
+        }
+    } else {
+        /*
+         * If there is no autorization header, return 401 status code with JSON
+         * error message
+         */
+        return res.status(401).json({
+            error: {
+                msg: 'No token!'
+            }
+        });
+    }
+    next();
+    return;
+};
 
-          next();
-          return null;
-        })
-        .catch(next);
-    });   
-}
 
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
 module.exports.hasPermission = function(action, resource) {
-  if (!action || !resource) {
+  if (!action || !resource)
     throw new Error('Action and resource needs to be set');
-  }
-  return compose()
-  .use(this.isAuthenticated())
-  .use((req, res, next) => {
-    if (req.user.hasPermission(action, resource)) {
+  
+  return function (req, res, next) {
+    if (permissions[req.user.role][action].indexOf(resource) != -1) {
       next();
     } else {
       res.status(403).send('Forbidden');
     }
-  });
+  };
 } 

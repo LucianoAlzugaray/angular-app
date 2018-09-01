@@ -18,7 +18,9 @@ export interface Client {
 export class ClientsComponent implements OnInit {
   displayedColumns : string[] = ['id', 'name', 'email', 'role'];
   dataSource;
-
+  loading: boolean = true;
+  empty: boolean = false;
+ 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
@@ -26,11 +28,16 @@ export class ClientsComponent implements OnInit {
 
   ngOnInit() {
     this.clientService.getAll()
-      .subscribe(data => {
+    .subscribe(data => {
+      this.loading = false;
+      if(data){
         this.dataSource = new MatTableDataSource<Client>(JSON.parse(JSON.stringify(data)));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-      });
+      } else {
+        this.empty = true;
+      }
+    });
   }
  
 }

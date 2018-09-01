@@ -21,7 +21,9 @@ export interface Insurance {
 export class InsurancesComponent implements OnInit {
   displayedColumns : string[] = ['id', 'userName', 'amountInsured', 'email', 'inceptionDate', 'installmentPayment'];
   dataSource;
-
+  loading: boolean = true;
+  empty: boolean = false;
+  
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -30,9 +32,14 @@ export class InsurancesComponent implements OnInit {
   ngOnInit() {
     this.insuranceService.getAll()
       .subscribe(data => {
-        this.dataSource = new MatTableDataSource<Insurance>(JSON.parse(JSON.stringify(data)));
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.loading = false;
+        if(data){
+          this.dataSource = new MatTableDataSource<Insurance>(JSON.parse(JSON.stringify(data)));
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        } else {
+          this.empty = true;
+        }
       });
   }
 }

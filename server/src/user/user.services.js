@@ -73,6 +73,27 @@ module.exports.getUser = function(username) {
   }); 
 }
 
+const findUserById = (clients, id) => {
+  for (client in clients) {
+    if (clients[client].id == id)
+      return clients[client];
+  }
+  return null;
+}
+
+
+module.exports.getUserById = function(id) {
+  return new Promise( function(resolve, reject){ 
+    getAllUsers().then(clients => {
+      let user = findUserById(clients, id); 
+      if (user != null)
+        resolve(user);
+      else
+        reject('No se encontro usuario de id ' + id);
+    });
+  }); 
+}
+
 module.exports.getAll = function() {
   return getAllUsers();
 }

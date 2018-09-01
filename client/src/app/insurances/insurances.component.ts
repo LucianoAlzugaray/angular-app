@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InsuranceService} from './insurances.service';
 import {MatSort, MatPaginator, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import { ClientInfoComponent } from '../clients/clientInfo.component';
 
 export interface Insurance {
   id:string,
@@ -27,7 +29,7 @@ export class InsurancesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private insuranceService:InsuranceService) { }
+  constructor(private insuranceService:InsuranceService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.insuranceService.getAll()
@@ -42,4 +44,13 @@ export class InsurancesComponent implements OnInit {
         }
       });
   }
+
+
+  openDialog(client):void {
+      console.log(client.id);
+      const dialogRef = this.dialog.open(ClientInfoComponent, {
+        width: '250px',
+        data: {id: client.id }
+      });
+    }  
 }

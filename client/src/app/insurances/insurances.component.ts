@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { InsuranceService} from './insurances.service';
-import { ClientService} from '../clients/clients.service';
+import {MatSort, MatPaginator, MatTableDataSource} from '@angular/material';
 
 export interface Insurance {
   id:string,
@@ -8,7 +8,8 @@ export interface Insurance {
   email:string,
   inceptionDate:string,
   installmentPayment:boolean,
-  clientId:string
+  clientId:string,
+  userName:string
 }
 
 
@@ -18,26 +19,20 @@ export interface Insurance {
   styleUrls: ['./insurances.component.css']
 })
 export class InsurancesComponent implements OnInit {
-  displayedColumns : string[] = ['id', 'name', 'email', 'role'];
+  displayedColumns : string[] = ['id', 'userName', 'amountInsured', 'email', 'inceptionDate', 'installmentPayment'];
+  dataSource;
 
-  dataSource: Insurance[];
-  
-  constructor(private insuranceService:InsuranceService, 
-              private clientService: ClientService) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private insuranceService:InsuranceService) { }
 
   ngOnInit() {
-    let _this = this;
     this.insuranceService.getAll()
       .subscribe(data => {
-        _this.dataSource = JSON.parse(JSON.stringify(data));
+        this.dataSource = new MatTableDataSource<Insurance>(JSON.parse(JSON.stringify(data)));
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       });
-  }
-  
-  getName(user){
-
-  }
-
-  printDate(date){
-    
   }
 }

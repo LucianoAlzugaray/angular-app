@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ClientService} from './clients.service';
+import {MatSort, MatPaginator, MatTableDataSource} from '@angular/material';
+
 export interface Client {
   name: string;
   email: string;
@@ -15,17 +17,19 @@ export interface Client {
 })
 export class ClientsComponent implements OnInit {
   displayedColumns : string[] = ['id', 'name', 'email', 'role'];
+  dataSource;
 
-  dataSource: Client[];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   
   constructor(private clientService:ClientService) { }
 
   ngOnInit() {
-    let _this = this;
     this.clientService.getAll()
       .subscribe(data => {
-        console.log(data)
-        _this.dataSource = JSON.parse(JSON.stringify(data));
+        this.dataSource = new MatTableDataSource<Client>(JSON.parse(JSON.stringify(data)));
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       });
   }
  

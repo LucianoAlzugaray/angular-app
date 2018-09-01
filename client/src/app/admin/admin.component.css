@@ -6,4 +6,18 @@
     margin-right: auto;
 }
 
+.admin-buttons {
+    z-index: 10;
+    left:32%;    
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
 
+.logout {
+    margin-top: 20px;
+    position: absolute;
+    float: bottom;
+    bottom:-30%;
+    left: 40%;
+}

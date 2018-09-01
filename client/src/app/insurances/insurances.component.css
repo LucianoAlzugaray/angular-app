@@ -2,3 +2,20 @@ table {
     width: 100%;
   }
 
+.table-container {
+  overflow: auto;  
+  width: 100%;
+}
+
+.super-container {
+  -webkit-box-shadow: 0px 19px 64px 0px rgba(0,0,0,0.4);
+  -moz-box-shadow: 0px 19px 64px 0px rgba(0,0,0,0.4);
+  box-shadow: 0px 19px 64px 0px rgba(0,0,0,0.4);
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+th.ng-star-inserted, td.ng-star-inserted {
+  padding: 0 20px 0 20px;
+}
